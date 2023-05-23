@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>V1 carga de informacion PITSA</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css' rel='stylesheet' />
+    <style>
+      body { 
+        margin: 0; 
+        padding: 0; 
+      }
+      #map { 
+        position: absolute; 
+        top: 0; 
+        bottom: 0; 
+        width: 100%;  
+      }
+      .legend {
+        background-color: #ffffff87;
+        border-radius: 5px;
+        bottom: 30px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        font: 12px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
+        padding: 10px;
+        position: absolute;
+        right: 10px;
+        z-index: 1;
+      }
+      .legend h2 {
+        margin: 0 0 10px;
+      }
+      .legend div span {
+        border-radius: 10%;
+        display: inline-block;
+        height: 3px;
+        margin-right: 5px;
+        width: 20px;
+      }
+      #menu {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        border-radius: 3px;
+        width: 120px;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        font-family: "Arial", sans-serif;
+        position: absolute;
+        bottom: 30px;
+        left: 10px;
+        z-index: 1;
+      }
+      #menu a {
+        font-size: 13px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+        text-align: center;
+      }
+      #menu a:last-child {
+        border: none;
+      }
+      #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+      }
+      #menu a.active {
+        background-color: #3887be;
+        color: #ffffff;
+      }
+      #menu a.active:hover {
+        background: #3074a4;
+      }
+      h2, h3 {
+        margin: 15px;
+        font-size: 1.8em;
+      }
+      p{
+        font-size: 1.1em;
+        margin: 10px;
+        text-align: left;
+      }
+      #features {
+        top: 0px;
+        left: 10px;
+        height:150px;
+        margin-top: 10px;
+        width: 350px;
+      }
+      .map-overlay {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(255, 255, 255, 0.5);
+        margin-right:20px;
+        font-family: Arial, sans-serif;
+        overflow: auto;
+        border-radius: 3px;
+      }
+    
+    </style>
+  </head>
+  <body>
+    <div id='map'></div>
+<!------------------------------------->   
+   
+    <div class="map-overlay" id="features">
+      <h2> Plataforma ECSA V 1.0</h2>
+      
+      <div id="pd">
+        <p>
+           Cartografía de conflictos y problemáticas socioambientales <br>         
+        </p>
+        <!//Quizas poner imagen de Logo PITSA>
+      </div>
+    </div>
+<!------------------------------------->   
+
+    <div id="legend" class="legend">
+      <h2>Leyenda/Referencia</h2>        
+      <div>
+        <span style="
+            background-color: #f27b2c;
+            border-radius: 50%;
+            height: 10px;
+            width: 10px;
+          "></span>Eventos/denuncias del formulario
+      </div>
+    </div>
+<!------------------------------------->   
+  
+
+    <script>
+    // Agrega los controles de navegación
+    // The value for 'accessToken' begins with 'pk...'
+     mapboxgl.accessToken =
+        "pk.eyJ1IjoiZ2VvY2FzdGVsbGFub3NnIiwiYSI6ImNrbHNjOGF5azAydnoydnBpMXR0eTNnMDAifQ.bfvHzRUChGqTE7iORzaIJA";
+      const map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/geocastellanosg/cleoe3aag000a01p765jkv41p",
+        center: [-66.104,-34.001],
+        zoom: 6.7,
+        minZoom: 6.5
+      });
+        map.on('click', (event) => {
+        const features = map.queryRenderedFeatures(event.point, {
+          layers: ['2g']
+        });
+        if (!features.length) {
+          return;
+        }
+        const feature = features[0];
+
+        const popup = new mapboxgl.Popup({ offset: [0, -5] })
+          .setLngLat(feature.geometry.coordinates)
+          .setHTML(
+            `<h3>${feature.properties.title}</h3>
+            <h4>Descripcion:</h4>
+            <p>${feature.properties.Descripci}</p>
+            <h4>Localidad afectada:</h4>
+            <p>${feature.properties.Localidad}</p>
+            <h4>Habitantes afectados:</h4>
+            <p>${feature.properties.Habitantes}</p>
+            <h4>Afectacion</h4>
+            <p>${feature.properties.Afecta}</p>
+            <p>${feature.properties.Afectados}</p>
+            <h4>Estado del evento:</h4>
+            <p>${feature.properties.Estado}</p>
+            `
+          )
+          .addTo(map);
+      });
+      // Agrega los controles de navegación
+      map.addControl(new mapboxgl.NavigationControl());
+  
+      </script>
+  
+</html>
